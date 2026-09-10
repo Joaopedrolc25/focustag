@@ -1,0 +1,14 @@
+{
+  "name": "FocusTag",
+  "short_name": "FocusTag",
+  "description": "O alarme que só desliga quando você levanta e encosta na tag.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F1EFEA",
+  "theme_color": "#FF5A1F",
+  "icons": [
+    { "src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
