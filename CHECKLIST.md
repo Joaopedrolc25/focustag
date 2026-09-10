@@ -125,9 +125,11 @@ Vale, se sobrar tempo (feitos):
 
 ## Bloco 6 — Publicar e ensaiar
 
-- [ ] Subir no Vercel ou GitHub Pages (HTTPS, para a tag funcionar no Android)
-- [ ] Testar o fluxo real: tag colada na parede, celular do João, modo demonstração
-- [ ] Testar o modo simulado no laptop (o que roda no pitch)
+- [x] Repositório no GitHub: `github.com/Joaopedrolc25/focustag` (público)
+- [x] Publicado em HTTPS: **https://joaopedrolc25.github.io/focustag/** (GitHub Pages, no ar e testado)
+- [x] Modo simulado testado a partir da URL ao vivo (sem erros, service worker registrado)
+- [ ] Importar o repo na Vercel (vercel.com/new) para a URL `.vercel.app` — só o João, no painel
+- [ ] Testar o fluxo real: tag colada na parede, Chrome do Android do João
 - [ ] Testar num segundo celular
 - [ ] Roteiro da demonstração: o que mostrar, em que ordem, o que falar
 - [ ] 2 ou 3 capturas de tela boas para os slides

@@ -101,3 +101,17 @@ Adicionados de uma vez, a pedido do João:
 `DEFAULT` no load cobre estado antigo do localStorage sem os campos novos.
 
 Sem erros de console no fluxo completo (testado com Playwright). Falta o Bloco 6 (publicar).
+
+## 2026-09-10 (cont.) — Publicado (Bloco 6, parcial)
+
+- Repositório git inicializado em `app-web/`, com `.gitignore`, `README.md`, `vercel.json`.
+- Criado `github.com/Joaopedrolc25/focustag` (público) e feito o push (`gh repo create`).
+- GitHub Pages ligado: **https://joaopedrolc25.github.io/focustag/** — no ar, testado com
+  Playwright (renderiza, sem erro de console, service worker registrado, sw.js/manifest/assets 200).
+- Como o app usa caminhos relativos, funciona igual num subcaminho (`/focustag/`) ou na raiz.
+- Vercel: o repo está pronto. Falta o João importar em vercel.com/new (framework "Other",
+  sem build). Isso é no painel, com a conta dele.
+- `vercel.json` já marca site estático e desliga o cache do `sw.js`.
+
+Pendente do Bloco 6: importar na Vercel, testar a tag NFC real no Android, segundo celular,
+roteiro do pitch, capturas pros slides.
