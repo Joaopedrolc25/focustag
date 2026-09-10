@@ -115,3 +115,22 @@ Sem erros de console no fluxo completo (testado com Playwright). Falta o Bloco 6
 
 Pendente do Bloco 6: importar na Vercel, testar a tag NFC real no Android, segundo celular,
 roteiro do pitch, capturas pros slides.
+
+## 2026-09-10 (cont.) — Deploy na Vercel
+
+- A CLI da Vercel nesta máquina estava logada na conta do **Gustavo** (`pacheco-e-almeida-braga`,
+  o site-institucional dele). Não era a do João. `vercel logout` + `vercel login jopedroleme@gmail.com`
+  (fluxo de device code: o João aprovou em vercel.com/oauth/device).
+- `vercel --prod` na conta do João (`utilitudocomerciodashboard`, a mesma do utilitudo).
+- Projeto criado como `app-web` (nome da pasta) e renomeado pra `focustag` (`vercel project rename`).
+  O domínio automático ficou `app-web-nine-wine.vercel.app` (foi gerado enquanto o projeto ainda
+  se chamava app-web). Pra trocar pra um `focustag-*.vercel.app` é no painel (Settings > Domains).
+- Aliases manuais (`focustag-coquinhablack.vercel.app`) caem numa tela de login da Vercel
+  (Standard Protection nas URLs que não são o domínio automático do projeto). O domínio
+  automático `app-web-nine-wine.vercel.app` funciona aberto (200).
+- **URLs de produção no ar:**
+  - Vercel: https://app-web-nine-wine.vercel.app
+  - GitHub Pages: https://joaopedrolc25.github.io/focustag/
+- `.vercel/` adicionado ao `.gitignore`.
+- **Atenção:** a CLI da Vercel agora está logada como João. Pra mexer no site do Gustavo de
+  novo, precisa deslogar e logar na conta dele.

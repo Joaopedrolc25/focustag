@@ -126,9 +126,9 @@ Vale, se sobrar tempo (feitos):
 ## Bloco 6 — Publicar e ensaiar
 
 - [x] Repositório no GitHub: `github.com/Joaopedrolc25/focustag` (público)
-- [x] Publicado em HTTPS: **https://joaopedrolc25.github.io/focustag/** (GitHub Pages, no ar e testado)
+- [x] Publicado em HTTPS: **https://joaopedrolc25.github.io/focustag/** (GitHub Pages) e **https://app-web-nine-wine.vercel.app** (Vercel) — as duas no ar e testadas
 - [x] Modo simulado testado a partir da URL ao vivo (sem erros, service worker registrado)
-- [ ] Importar o repo na Vercel (vercel.com/new) para a URL `.vercel.app` — só o João, no painel
+- [x] Publicado na Vercel (conta do João, projeto `focustag`): **https://app-web-nine-wine.vercel.app**
 - [ ] Testar o fluxo real: tag colada na parede, Chrome do Android do João
 - [ ] Testar num segundo celular
 - [ ] Roteiro da demonstração: o que mostrar, em que ordem, o que falar
