@@ -134,3 +134,11 @@ roteiro do pitch, capturas pros slides.
 - `.vercel/` adicionado ao `.gitignore`.
 - **Atenção:** a CLI da Vercel agora está logada como João. Pra mexer no site do Gustavo de
   novo, precisa deslogar e logar na conta dele.
+
+## 2026-09-10 (cont.) — Domínio Vercel
+
+- `focusapp.vercel.app` já estava em uso por outra pessoa (403). `focustag.vercel.app` idem.
+- Adicionado **`focustag-app.vercel.app`** ao projeto (`vercel domains add`) + redeploy.
+  Funciona aberto (200), diferente dos aliases via `vercel alias set` que caíam no login.
+- URL de produção da Vercel agora: **https://focustag-app.vercel.app**
+  (o `app-web-nine-wine.vercel.app` continua respondendo também).
