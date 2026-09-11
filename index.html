@@ -241,6 +241,20 @@
   .soon .ic svg{width:17px;height:17px;stroke:var(--ink-soft);fill:none;stroke-width:2}
   .soon h4{font-size:14px;font-weight:800}
   .soon p{font-size:12.5px;color:var(--ink-soft)}
+  .soon.locked{opacity:.42}
+  .soon.locked .ic{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong)}
+
+  /* ---------- ranking ---------- */
+  .rank-row{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 13px;margin-top:8px}
+  .rank-row.me{border-color:var(--orange);background:#fdf4ee}
+  .rank-row .pos{width:22px;flex:none;font-family:"Barlow Semi Condensed",sans-serif;font-weight:900;font-size:15px;color:var(--ink-soft);text-align:center}
+  .rank-row.top .pos{color:var(--orange-press)}
+  .rank-row .av{width:36px;height:36px;border-radius:999px;flex:none;display:grid;place-items:center;font-weight:800;font-size:12px;color:var(--ink);background:var(--paper-2)}
+  .rank-row.me .av{background:var(--orange);color:#fff}
+  .rank-row .nm{flex:1;font-weight:700;font-size:13.5px}
+  .rank-row .tagme{font-size:9.5px;font-weight:800;color:var(--orange-press);letter-spacing:.04em;margin-left:4px}
+  .rank-row .st{display:flex;align-items:center;gap:5px;font-family:"Barlow Semi Condensed",sans-serif;font-weight:900;font-size:15px;color:var(--ink)}
+  .rank-row .st svg{width:13px;height:13px;flex:none}
 
   /* ---------- toast / overlay ---------- */
   #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:999px;font-weight:700;font-size:13.5px;max-width:90%;text-align:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.18)}
@@ -387,6 +401,7 @@
 
     <button id="btn-armar" class="btn btn-primary mt-md">Armar alarme</button>
     <button class="btn btn-quiet mt-sm" data-go="stats">Meus números</button>
+    <button class="btn btn-quiet" data-go="rank">Ranking</button>
     <button class="btn btn-quiet" data-go="sobre">Sobre o FocusTag</button>
   </section>
 
@@ -462,7 +477,7 @@
     <div class="summary" id="done-summary"></div>
     <button id="btn-share" class="btn btn-ghost mt-md">Compartilhar minha manhã</button>
     <button class="btn btn-primary mt-sm" data-go="config">Voltar ao início</button>
-    <button class="btn btn-quiet mt-sm" data-go="stats">Meus números</button>
+    <button class="btn btn-quiet mt-sm" data-go="rank">Ver ranking</button>
   </section>
 
   <!-- ============ STATS ============ -->
@@ -473,8 +488,26 @@
     </div>
     <div id="stats-body" class="mt-md"></div>
     <div class="spacer"></div>
-    <button class="btn btn-quiet mt-md" data-go="history">Ver histórico completo</button>
+    <button class="btn btn-quiet mt-md" data-go="rank">Ver ranking</button>
+    <button class="btn btn-quiet" data-go="history">Ver histórico completo</button>
     <button id="btn-hist-clear2" class="btn btn-quiet" hidden>apagar histórico</button>
+  </section>
+
+  <!-- ============ RANKING ============ -->
+  <section id="screen-rank" class="screen" hidden>
+    <div class="row">
+      <h1 class="title">Ranking</h1>
+      <button class="btn btn-ghost" style="width:auto;min-height:44px;padding:0 18px" data-go="config">Voltar</button>
+    </div>
+    <div class="preset-row mt-md" id="rank-tabs">
+      <button class="pchip" data-rtab="amigos">Amigos</button>
+      <button class="pchip" data-rtab="grupo">Grupo</button>
+      <button class="pchip" data-rtab="geral">Geral</button>
+    </div>
+    <p class="field-hint" id="rank-sub" style="margin-top:8px"></p>
+    <div id="rank-list" class="mt-md"></div>
+    <p class="fineprint mt-md">Ranking ilustrativo, com usuários simulados. Mostra como vai funcionar quando os amigos de verdade entrarem no app.</p>
+    <div class="spacer"></div>
   </section>
 
   <!-- ============ HISTORY ============ -->
@@ -565,12 +598,13 @@ var hist=load(LS_HIST,[]);
 var $=function(id){return document.getElementById(id);};
 
 /* ---------- navigation ---------- */
-var SCREENS=['intro','config','armed','alarm','focus','done','history','stats','sobre'];
+var SCREENS=['intro','config','armed','alarm','focus','done','history','stats','sobre','rank'];
 function show(name){
   SCREENS.forEach(function(s){$('screen-'+s).hidden=(s!==name);});
   window.scrollTo(0,0);
   if(name==='history') renderHist();
   if(name==='stats') renderStats();
+  if(name==='rank') renderRanking();
   if(name==='config' && typeof wheelSet==='function'){ wheelSet(wheelH,pickH); wheelSet(wheelM,pickM); renderTomorrow(); }
 }
 document.querySelectorAll('[data-go]').forEach(function(b){
@@ -1191,6 +1225,23 @@ $('btn-hist-clear').addEventListener('click',clearHist);
 $('btn-hist-clear2').addEventListener('click',clearHist);
 
 /* ---------- stats ---------- */
+var CONQUISTAS=[
+  {id:'semana', nome:'Primeira semana', desc:'7 dias seguidos',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>',
+    check:function(){ return bestStreak()>=7; }},
+  {id:'mes', nome:'Um mês de rotina', desc:'30 dias seguidos',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>',
+    check:function(){ return bestStreak()>=30; }},
+  {id:'cedo', nome:'Madrugador', desc:'5 manhãs com alarme antes das 6h',
+    icon:ICON.clk,
+    check:function(){ return hist.filter(function(m){return cumprida(m)&&(+m.alarme.split(':')[0])<6;}).length>=5; }},
+  {id:'foco', nome:'Foco de ferro', desc:'10 janelas de foco completas',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    check:function(){ return hist.filter(function(m){return m.focoStatus==='completa';}).length>=10; }},
+  {id:'firme', nome:'Sem desculpa', desc:'10 manhãs cumpridas, sem emergência',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg>',
+    check:function(){ return hist.filter(cumprida).length>=10; }}
+];
 function renderStats(){
   var body=$('stats-body');
   $('btn-hist-clear2').hidden=!hist.length;
@@ -1212,6 +1263,13 @@ function renderStats(){
     return '<div class="b'+(cumprida(m)?'':' emg')+'"><div style="flex:1;display:flex;align-items:flex-end;width:100%;justify-content:center"><div class="bar" style="height:'+hpct+'%"></div></div><div class="bl">'+lbl+'</div></div>';
   }).join('');
 
+  var badges=CONQUISTAS.map(function(c){
+    var got=c.check();
+    return '<div class="soon'+(got?'':' locked')+'"><div class="ic">'+c.icon+'</div>'
+      +'<div><h4>'+c.nome+(got?'':' <span class="chip neutral" style="padding:2px 8px;font-size:9px;margin-left:4px">bloqueado</span>')+'</h4>'
+      +'<p>'+c.desc+'</p></div></div>';
+  }).join('');
+
   body.innerHTML=
     '<div class="stat3">'
     +'<div class="c"><div class="v">'+cumpr+'/'+total+'</div><div class="l">cumpridas</div></div>'
@@ -1219,11 +1277,60 @@ function renderStats(){
     +'<div class="c"><div class="v">'+fmtDur(media)+'</div><div class="l">atraso médio</div></div>'
     +'</div>'
     +'<p class="field-hint" style="margin-top:10px">'+pct+'% das manhãs você levantou pela tag, sem emergência.</p>'
-    +'<div class="bars-wrap mt-md"><span class="kicker">Segundos até levantar · últimas '+last.length+'</span><div class="bars">'+bars+'</div></div>';
+    +'<div class="bars-wrap mt-md"><span class="kicker">Segundos até levantar · últimas '+last.length+'</span><div class="bars">'+bars+'</div></div>'
+    +'<div class="card mt-md"><span class="kicker" style="display:block;margin-bottom:6px">Conquistas</span>'+badges+'</div>';
 }
 function fmtDur(s){
   if(s<60) return s+'s';
   return Math.floor(s/60)+'m'+(s%60?' '+(s%60)+'s':'');
+}
+
+/* ---------- ranking (simulado) ---------- */
+var FAKE_USERS=[
+  {nome:'Marina Torres', streak:34, amigo:true,  grupo:false},
+  {nome:'Pedro Almeida', streak:28, amigo:true,  grupo:true },
+  {nome:'Ana Beatriz',   streak:21, amigo:true,  grupo:true },
+  {nome:'Rafael Souza',  streak:17, amigo:false, grupo:true },
+  {nome:'Camila Rocha',  streak:14, amigo:true,  grupo:true },
+  {nome:'Lucas Vieira',  streak:9,  amigo:true,  grupo:false},
+  {nome:'Beatriz Lima',  streak:6,  amigo:false, grupo:true },
+  {nome:'Gabriel Costa', streak:3,  amigo:true,  grupo:false},
+  {nome:'Isabela Nunes', streak:1,  amigo:false, grupo:false}
+];
+var GRUPO_NOME='Madrugada Produtiva';
+var rankTab='amigos';
+var rankTabs=$('rank-tabs');
+rankTabs.querySelectorAll('.pchip').forEach(function(b){
+  b.addEventListener('click',function(){ renderRanking(b.dataset.rtab); });
+});
+function initials(nome){ return nome.split(' ').map(function(p){return p[0];}).slice(0,2).join('').toUpperCase(); }
+function renderRanking(tab){
+  rankTab=tab||rankTab;
+  rankTabs.querySelectorAll('.pchip').forEach(function(b){ b.classList.toggle('on',b.dataset.rtab===rankTab); });
+
+  var pool=FAKE_USERS.filter(function(u){
+    if(rankTab==='amigos') return u.amigo;
+    if(rankTab==='grupo') return u.grupo;
+    return true;
+  });
+  var list=pool.map(function(u){ return {nome:u.nome, streak:u.streak, eu:false}; });
+  list.push({nome:'Você', streak:streakDias(), eu:true});
+  list.sort(function(a,b){ return b.streak-a.streak; });
+
+  $('rank-sub').textContent =
+    rankTab==='grupo' ? ('Grupo "'+GRUPO_NOME+'" · '+list.length+' pessoas')
+    : rankTab==='amigos' ? (list.length+' pessoas que você segue')
+    : ('Ranking geral · '+list.length+' pessoas');
+
+  $('rank-list').innerHTML=list.map(function(u,i){
+    var pos=i+1;
+    return '<div class="rank-row'+(u.eu?' me':'')+(pos<=3?' top':'')+'">'
+      +'<div class="pos">'+pos+'º</div>'
+      +'<div class="av">'+(u.eu?'EU':initials(u.nome))+'</div>'
+      +'<div class="nm">'+(u.eu?'Você <span class="tagme">É VOCÊ</span>':u.nome)+'</div>'
+      +'<div class="st">'+FLAME+' '+u.streak+'</div>'
+      +'</div>';
+  }).join('');
 }
 
 /* ---------- audio ---------- */

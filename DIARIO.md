@@ -142,3 +142,17 @@ roteiro do pitch, capturas pros slides.
   Funciona aberto (200), diferente dos aliases via `vercel alias set` que caíam no login.
 - URL de produção da Vercel agora: **https://focustag-app.vercel.app**
   (o `app-web-nine-wine.vercel.app` continua respondendo também).
+
+## 2026-09-10 (cont.) — Roteiro do pitch + objeções
+
+Deck de pitch (11 slides) revisado e considerado coerente com o app e o plano.
+Gerado `pitch/Roteiro e Objecoes - FocusTag.pdf` (9 páginas):
+- Roteiro de 5 min, fala por fala, com 3 vozes (problema / solução+demo / negócio), amarrado
+  slide a slide do deck.
+- Coreografia da demonstração ao vivo (10 passos, modo demonstração, tela laranja, tag desliga).
+- Checklist pré-apresentação (Android+Chrome, tag já registrada, cache offline, plano B).
+- 15 objeções da banca + resposta pronta (a nº1 é o preço R$59,90 da tag; a nº11 é ser honesto
+  que o bloqueio é ilustrado no protótipo web).
+- 3 regras pra Q&A.
+Consertos recomendados no deck antes de imprimir: apagar as 2 "(Fonte:...)" do slide 4;
+"todas as manhãs" -> "por manhã" no slide 2.
